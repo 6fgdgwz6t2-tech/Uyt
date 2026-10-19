@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#10243a">
+<title>NK Property Desk</title>
+<style>
+:root{
+ --ink:#142236;--navy:#12253b;--blue:#315fe8;--blue-soft:#edf2ff;
+ --paper:#f5f3ee;--white:#fff;--muted:#788393;--line:#e5e7eb;
+ --green:#23764b;--green-bg:#e9f5ed;--amber:#98651a;--amber-bg:#fff3d9;
+ --shadow:0 8px 24px rgba(20,34,54,.055)
+}
+*{box-sizing:border-box}
+html{background:var(--paper);-webkit-text-size-adjust:100%;scroll-padding-top:20px}
+body{margin:0;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-size:15px;line-height:1.45}
+button,input,select,textarea{font:inherit;max-width:100%}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.app{width:100%;max-width:760px;min-height:100vh;margin:auto;padding-bottom:calc(100px + env(safe-area-inset-bottom));background:var(--paper)}
+.top{padding:calc(18px + env(safe-area-inset-top)) 22px 25px;background:var(--navy);color:white;border-radius:0 0 28px 28px}
+.brandrow{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brandlockup{display:flex;align-items:center;gap:10px;min-width:0}
+.logo{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:#fff;color:var(--navy);font-size:14px;font-weight:900;letter-spacing:-1px;flex:0 0 auto}
+.brand{font-size:15px;font-weight:800;letter-spacing:.1px}
+.sub{margin-top:2px;color:#aebed0;font-size:9px;letter-spacing:1.3px;font-weight:700}
+.topbadge{border:1px solid #ffffff35;color:#dce5ef;padding:7px 9px;border-radius:999px;font-size:9px;letter-spacing:1px;white-space:nowrap}
+.hero{margin-top:28px;max-width:470px}
+.eyebrow{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#a9c1ff}
+.hero h1{margin:8px 0 9px;font-size:32px;line-height:1.06;letter-spacing:-1.2px;font-weight:800}
+.topnote{max-width:340px;color:#c1ccda;font-size:13px;line-height:1.6}
+.main{padding:0 17px 24px}
+.searchpanel{position:relative;margin-top:-1px;padding:13px;background:var(--white);border:1px solid var(--line);border-radius:19px;box-shadow:var(--shadow)}
+.searchlabel{display:block;margin:0 0 7px 2px;font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted)}
+.searchwrap{position:relative}
+.searchicon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:19px;color:#637187;pointer-events:none}
+.search{width:100%;height:48px;border:1px solid #e7eaf0;background:#f8f9fb;border-radius:12px;padding:0 12px 0 42px;outline:none;color:var(--ink);font-size:14px}
+.search:focus{border-color:#9ab1ff;box-shadow:0 0 0 3px #315fe814;background:white}
+.sectionlabel{margin:22px 2px 9px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sectionlabel strong{font-size:10px;letter-spacing:1.3px;text-transform:uppercase;color:#6f7a89}
+.sectionlabel span{font-size:11px;color:var(--muted)}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:0}
+.tab{display:flex;align-items:center;gap:11px;text-align:left;padding:13px 12px;border:1px solid #e0e4ea;border-radius:15px;background:#fff;color:#5f6d7e;min-height:68px;font-weight:750}
+.tabicon{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:#f0f2f6;font-size:18px;flex:0 0 auto}
+.tabtext{min-width:0;font-size:14px}
+.tab small{display:block;margin-top:3px;font-size:10px;font-weight:500;opacity:.8}
+.tab.active{background:var(--navy);border-color:var(--navy);color:white;box-shadow:0 5px 12px #12253b18}
+.tab.active .tabicon{background:#ffffff19;color:white}
+.filterhead{display:flex;justify-content:space-between;align-items:center;margin:23px 2px 9px}
+.filterhead strong{font-size:10px;letter-spacing:1.3px;text-transform:uppercase;color:#6f7a89}
+.filters{display:flex;flex-wrap:wrap;gap:7px;padding:0}
+.chip{white-space:nowrap;border:1px solid #e0e4ea;border-radius:999px;padding:8px 11px;background:#fff;color:#586678;font-size:11px;font-weight:700;min-height:34px}
+.chip.active{background:var(--blue-soft);border-color:#b9c9ff;color:#264fcb}
+.toolsrow{display:flex;align-items:center;gap:8px;margin-top:15px}
+.toolbtn{border:0;background:transparent;color:#637187;font-size:11px;font-weight:700;padding:7px 2px;display:flex;align-items:center;gap:5px}
+.toolbtn:first-child{padding-left:0}
+.toolsep{width:1px;height:15px;background:#d8dde4}
+.listhead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin:26px 2px 12px}
+.list-kicker{font-size:10px;color:var(--blue);font-weight:800;letter-spacing:1.5px;text-transform:uppercase}
+.listhead h2{margin:3px 0 0;font-size:24px;letter-spacing:-.8px;line-height:1.1}
+.count{color:var(--muted);font-size:11px;white-space:nowrap;padding-bottom:3px}
+.cards{display:grid;grid-template-columns:1fr;gap:10px}
+.project{position:relative;background:var(--white);border:1px solid #e6e7e9;border-radius:18px;padding:16px;box-shadow:0 3px 12px rgba(20,34,54,.025);overflow:hidden}
+.project:before{content:"";position:absolute;left:0;top:16px;bottom:16px;width:3px;border-radius:0 4px 4px 0;background:#dce4f5}
+.projecttop{display:flex;align-items:flex-start;justify-content:space-between;gap:9px;padding-left:5px}
+.projectname{font-size:17px;font-weight:800;line-height:1.2;letter-spacing:-.35px}
+.developer{font-size:11px;color:var(--muted);margin-top:5px}
+.tag{display:inline-flex;align-items:center;justify-content:center;max-width:47%;white-space:normal;text-align:center;border-radius:8px;padding:6px 8px;font-size:9px;font-weight:800;line-height:1.3;flex:0 0 auto}
+.tag.ready{background:var(--green-bg);color:var(--green)}
+.tag.future{background:var(--amber-bg);color:var(--amber)}
+.tag.check{background:#f0f2f5;color:#5f6c7b}
+.tag.other{background:var(--blue-soft);color:#3155c4}
+.projectmeta{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 0;padding-left:5px}
+.pill{background:#f4f5f7;border:1px solid #eceef1;border-radius:8px;padding:6px 8px;color:#627083;font-size:10px}
+.projectactions{display:flex;align-items:center;gap:8px;margin-top:15px;padding-left:5px}
+.btn{border:0;border-radius:11px;padding:10px 13px;min-height:39px;font-size:11px;font-weight:800}
+.btn.primary{flex:1;background:var(--blue);color:white}
+.btn.soft{background:#f0f2f5;color:#344357}
+.btn.danger{background:#fff0f0;color:#b42318}
+.empty{padding:28px 18px;text-align:center;color:var(--muted);background:#fff;border:1px dashed #d1d7df;border-radius:17px;font-size:13px}
+.bottomnav{display:none}
+.footer{text-align:center;color:#9aa2ac;font-size:10px;padding:24px 0 6px}
+.addbar{position:fixed;bottom:0;left:0;right:0;z-index:5;padding:10px 17px calc(10px + env(safe-area-inset-bottom));background:#f5f3eeeF;backdrop-filter:blur(18px);border-top:1px solid #e4e2dd}
+.addbar button{display:block;width:100%;max-width:726px;margin:auto;min-height:51px;border:0;border-radius:15px;background:var(--blue);color:white;font-size:14px;font-weight:800;box-shadow:0 7px 18px #315fe82b}
+.modalback{position:fixed;inset:0;background:#0d1929a8;display:none;align-items:flex-end;justify-content:center;z-index:10;padding:0}
+.modalback.show{display:flex}
+.modal{width:100%;max-width:700px;max-height:92vh;overflow:auto;background:#fff;border-radius:25px 25px 0 0;padding:20px 18px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -12px 45px #0002}
+.modalhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}
+.modalhead h2{font-size:20px;letter-spacing:-.5px;margin:0}
+.close{width:36px;height:36px;border:0;border-radius:50%;background:#f0f2f5;font-size:22px;color:#334}
+.field{margin:12px 0}
+.field label{display:block;font-size:11px;font-weight:800;color:#4a5b6d;margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;min-height:44px;border:1px solid #d9e1e9;border-radius:11px;padding:11px;background:#fff;outline:none;font-size:14px}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#7da4ff;box-shadow:0 0 0 3px #2563eb15}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hint,.note{font-size:11px;color:var(--muted);line-height:1.55}
+.calcbox{margin-top:12px;background:#f0f4ff;border:1px solid #dce5ff;border-radius:15px;padding:14px}
+.calcbox .label{font-size:11px;color:#42618c}
+.bigmoney{font-size:24px;font-weight:850;color:#1747a6;margin:4px 0}
+.calcrow{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:#4c6078;margin-top:8px}
+.quickperc{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.quickperc button{border:1px solid #c9d9f5;background:#fff;border-radius:999px;padding:7px 11px;color:#2352a3;font-size:12px;font-weight:750}
+.detailsgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.detailbox{padding:12px;background:#f7f8fa;border:1px solid #eceef2;border-radius:12px}
+.detailbox small{display:block;color:var(--muted);font-size:10px}
+.detailbox strong{display:block;margin-top:4px;font-size:13px;overflow-wrap:anywhere}
+.toast{position:fixed;left:50%;bottom:calc(80px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#172536;color:#fff;padding:11px 16px;border-radius:12px;font-size:12px;display:none;z-index:20;box-shadow:0 5px 20px #0002;max-width:90%;text-align:center}
+.toast.show{display:block}
+@media(min-width:650px){
+ .app{box-shadow:0 0 60px #1422360b}
+ .top{padding:26px 30px 32px}
+ .main{padding:0 28px 30px}
+ .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .project{padding:17px}
+ .modalback{align-items:center;padding:20px}
+ .modal{border-radius:22px;padding:24px;max-height:88vh}
+ .addbar{padding-left:28px;padding-right:28px}
+ .hero h1{font-size:38px}
+}
+@media(max-width:380px){
+ .top{padding-left:17px;padding-right:17px}
+ .main{padding-left:12px;padding-right:12px}
+ .hero h1{font-size:29px}
+ .tab{padding:11px 9px;gap:8px}
+ .tabtext{font-size:13px}
+ .project{padding:14px}
+ .projectname{font-size:16px}
+}
+
+.projecthero{padding:19px;border-radius:18px;background:linear-gradient(140deg,#13283f,#244866);color:#fff;margin-bottom:18px}
+.projecthero-eyebrow{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#b5caff;font-weight:800}
+.projecthero h3{font-size:25px;line-height:1.1;letter-spacing:-.7px;margin:7px 0}
+.projecthero p{font-size:12px;color:#d0dae6;margin:0 0 13px}
+.detailsection-title{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:18px 0 10px}
+.detailsection-title strong{font-size:14px;letter-spacing:-.2px}
+.unitcount{font-size:11px;color:var(--muted)}
+.mini-action{border:0;background:var(--blue-soft);color:#3155c4;border-radius:8px;padding:7px 9px;font-size:10px;font-weight:800}
+.projectnote{margin:12px 2px}
+.unitlist{display:grid;gap:8px}
+.unitcard{display:flex;align-items:center;gap:11px;text-align:left;width:100%;border:1px solid #e6eaf0;background:#fff;border-radius:14px;padding:10px}
+.unitthumb{width:60px;height:62px;border-radius:10px;background:linear-gradient(145deg,#e5ecf7,#f5f7fa);display:grid;place-items:center;font-size:25px;color:#3b5a7b;flex:0 0 auto}
+.unitcopy{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1}
+.unitcopy strong{font-size:13px;color:var(--ink)}
+.unitcopy small{font-size:10px;color:var(--muted)}
+.unitcopy b{font-size:12px;color:#1747a6}
+.unitchev{font-size:26px;color:#8b98aa}
+.unitempty{padding:18px 14px;border:1px dashed #cfd7e1;background:#f9fafc;border-radius:14px;display:grid;gap:5px}
+.unitempty strong{font-size:13px}
+.unitempty span{font-size:11px;color:var(--muted);line-height:1.5}
+.fullbtn{display:block;width:100%;margin-top:13px;min-height:45px}
+.unit-photo-placeholder{height:130px;border-radius:16px;background:linear-gradient(140deg,#dfe7f1,#f7f8fa);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:7px;color:#375578;margin-bottom:15px}
+.unit-photo-placeholder span{font-size:38px}
+.unit-photo-placeholder small{font-size:11px;font-weight:700}
+.unitdetail-title{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.unitdetail-title h3{font-size:21px;line-height:1.2;letter-spacing:-.5px;margin:0}
+.unitdetail-title p{font-size:11px;color:var(--muted);margin:5px 0 0}
+.unitstats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:16px 0}
+.unitstats div{border:1px solid #e9edf2;border-radius:12px;padding:12px 6px;text-align:center}
+.unitstats strong{display:block;font-size:17px}
+.unitstats small{display:block;font-size:10px;color:var(--muted);margin-top:3px}
+.unitpricebox{padding:15px;background:#f1f5ff;border:1px solid #e0e8ff;border-radius:15px;display:flex;flex-direction:column;gap:4px;margin:15px 0}
+.unitpricebox small{font-size:11px;color:#506b94}
+.unitpricebox strong{font-size:23px;line-height:1.2;letter-spacing:-.5px;color:#1747a6;overflow-wrap:anywhere}
+.unitpricebox span{font-size:11px;color:#687b94}
+.calc-toggle{display:grid;grid-template-columns:1fr 1fr;background:#edf0f5;border-radius:11px;padding:4px;gap:4px}
+.calc-toggle button{border:0;border-radius:8px;padding:9px;background:transparent;color:#56657a;font-size:12px;font-weight:750}
+.calc-toggle button.selected{background:var(--blue);color:white;box-shadow:0 2px 5px #315fe82b}
+
+
+/* Focused polish: make money figures readable and actions less oversized */
+.pill{font-size:11px;font-weight:600;padding:7px 9px;border-radius:9px;border-color:#e1e7ef;color:#56677d}
+.price-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0 0 5px}
+.price-cell{min-width:0;padding:10px 11px;border-radius:12px;background:#edf3ff;border:1px solid #d5e2ff}
+.price-cell small{display:block;font-size:9px;line-height:1.35;color:#607696;font-weight:750;margin-bottom:4px}
+.price-cell strong{display:block;color:#1747a6;font-size:13px;line-height:1.25;font-weight:850;overflow-wrap:anywhere}
+.price-cell.dp-cell{background:#fff4dc;border-color:#f0dcae}
+.price-cell.dp-cell small{color:#916722}
+.price-cell.dp-cell strong{color:#805315}
+.projectactions{margin-top:11px}
+.btn{min-height:34px;padding:8px 11px;border-radius:10px}
+.projectactions .btn.primary{flex:0 1 auto;min-width:0;padding:9px 15px}
+.projectactions .detail-cta{flex:0 0 auto;min-width:124px;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.projectactions .detail-cta span{font-size:14px;line-height:1}
+.project{transition:transform .15s ease,box-shadow .15s ease}
+.project:active{transform:scale(.995);box-shadow:0 5px 16px rgba(20,34,54,.07)}
+@media(max-width:380px){.price-cell{padding:9px}.price-cell strong{font-size:12px}.projectactions .detail-cta{min-width:112px}}
+
+
+/* Expanded highlighted project facts */
+.projectmeta{gap:8px;margin-top:14px}
+.projectmeta .pill{font-size:12px;padding:9px 11px;min-height:36px;background:#edf8f0;border:1px solid #cfead7;color:#246b43;font-weight:750;border-radius:11px}
+.projectmeta .pill:first-child{background:#f1f4f8;border-color:#e3e8ef;color:#53657a}
+.projectmeta .installment-pill{background:#f0eaff;border-color:#dfd0fb;color:#7044a4;font-weight:800}
+.price-strip{grid-template-columns:1fr 1fr;gap:9px;margin:12px 0 0 5px}
+.price-cell{padding:13px 14px;min-height:69px;border-radius:13px;background:#e9f7ed;border:1px solid #c9e9d2}
+.price-cell small{font-size:10px;color:#3f7853;margin-bottom:5px}
+.price-cell strong{font-size:15px;color:#1e7040;line-height:1.25}
+.price-cell.dp-cell{background:#e9f7ed;border-color:#c9e9d2}
+.price-cell.dp-cell small,.price-cell.dp-cell strong{color:#1e7040}
+.project{padding:18px 17px 17px}
+.projectactions{margin-top:14px}
+.projectactions .detail-cta{min-width:116px;padding:9px 13px}
+@media(max-width:420px){
+ .projectmeta .pill{font-size:11px;padding:9px 10px}
+ .price-strip{grid-template-columns:1fr;gap:7px}
+ .price-cell{min-height:0;padding:12px 13px}
+ .price-cell strong{font-size:15px}
+}
+
+.tag.midterm{background:#f0eaff;color:#7044a4;border:1px solid #dfd0fb}
+.tag.longterm{background:#e8f5f7;color:#176b78;border:1px solid #c8e8ec}
+
+/* Search + area clarity refinements */
+.searchpanel{width:100%;min-width:0;overflow:hidden}
+.searchwrap{display:flex;align-items:center;min-width:0}
+.search{min-width:0;padding-right:44px;transition:border-color .18s,box-shadow .18s,background .18s}
+.search:focus{background:#fff;border-color:#91aaff;box-shadow:0 0 0 4px #315fe81a}
+.clear-search{position:absolute;right:9px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:0;border-radius:50%;background:#e8edf5;color:#53657a;font-size:20px;line-height:1}
+.search-status{padding:8px 2px 0;color:#7b8798;font-size:10px;line-height:1.45}
+.pill.area-pill{background:#eaf3ff;border-color:#cbdfff;color:#2457a6;font-weight:800}
+@media(max-width:430px){
+ .hero h1{font-size:clamp(27px,7.4vw,32px);letter-spacing:-.8px}
+ .topnote{font-size:12px}
+ .searchpanel{padding:11px}
+ .search{font-size:14px;height:46px}
+ .tabs{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .tab{min-width:0}
+ .tabtext{overflow-wrap:anywhere}
+ .listhead h2{font-size:22px}
+ .projecttop{min-width:0}
+ .projecttop>div{min-width:0}
+ .projectname{overflow-wrap:anywhere}
+ .tag{max-width:45%;font-size:9px}
+}
+
+
+.projectmeta .finishing-pill{background:#e8f6f5;border-color:#c9e9e6;color:#176b68;font-weight:800}
+.field select{width:100%;min-height:44px;border:1px solid #dfe5ee;border-radius:11px;padding:10px 12px;background:#fff;color:var(--ink);font:inherit;font-size:13px}
+
+
+.unit-saved-dp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0 14px}
+.unit-saved-dp>div{min-width:0;padding:11px;border-radius:12px;background:#e9f6ed;border:1px solid #cce8d4}
+.unit-saved-dp>div:last-child{grid-column:1/-1;background:#f3f6fa;border-color:#e2e8f0}
+.unit-saved-dp small{display:block;font-size:10px;line-height:1.35;color:#477557;margin-bottom:4px}
+.unit-saved-dp strong{display:block;font-size:13px;line-height:1.3;color:#216b41;overflow-wrap:anywhere}
+.unit-saved-dp>div:last-child small{color:#68778b}
+.unit-saved-dp>div:last-child strong{color:#24364b}
+
+.cloud-panel{margin:14px 0 16px;padding:15px 16px;border:1px solid #dce5f1;border-radius:18px;background:linear-gradient(135deg,#f8fbff,#eef4ff);box-shadow:0 5px 16px rgba(23,44,78,.04)}
+.cloud-head{display:flex;align-items:center;gap:11px;min-width:0}.cloud-icon{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:#e2ebff;color:#3155b8;font-size:23px;flex:0 0 auto}
+.cloud-copy{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1}.cloud-copy strong{font-size:14px;color:#15243a}.cloud-copy span{font-size:11px;color:#68788e;line-height:1.4}
+.cloud-badge{font-size:9px;letter-spacing:.8px;font-weight:850;padding:6px 8px;border-radius:8px;background:#eef0f3;color:#667085}
+.cloud-settings{margin-top:12px;border-top:1px solid #e0e8f3;padding-top:11px}.cloud-settings summary{font-size:12px;font-weight:800;color:#3155b8;cursor:pointer;list-style:none}.cloud-settings p{font-size:11px;color:#64748b;line-height:1.5;margin:10px 0}
+.cloud-settings label{display:block;font-size:11px;font-weight:750;color:#34445b;margin:10px 0 5px}.cloud-settings input{display:block;width:100%;min-width:0;box-sizing:border-box;padding:11px 12px;border:1px solid #d7e0ed;border-radius:10px;background:#fff;font-size:13px;color:#17253a}
+.cloud-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.cloud-actions button{flex:1;min-width:120px}.cloud-help{padding:9px 10px;border-radius:9px;background:#fff7e8;color:#8a641d!important}
+@media(min-width:768px){.cloud-panel{padding:19px 22px;border-radius:20px}.cloud-copy strong{font-size:16px}.cloud-copy span{font-size:12px}.cloud-settings input{max-width:680px}}
+
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div class="brandrow">
+    <div class="brandlockup"><div class="logo">NK</div><div><div class="brand">NK Property Desk</div><div class="sub">REAL ESTATE FIELD GUIDE</div></div></div>
+    <div class="topbadge">PRIVATE WORKSPACE</div>
+  </div>
+  <div class="hero">
+    <div class="eyebrow">Your property shortlist</div>
+    <h1>Find the right<br>project, faster.</h1>
+    <div class="topnote">Browse projects, check delivery notes, and calculate a down payment in seconds.</div>
+  </div>
+</header>
+<main class="main">
+  <section class="cloud-panel" id="cloudPanel" aria-label="Cloud sync setup">
+    <div class="cloud-head"><div class="cloud-icon">☁</div><div class="cloud-copy"><strong>Cloud sync</strong><span id="cloudStatus">Not connected — data is still saved on this device.</span></div><span class="cloud-badge" id="cloudBadge">LOCAL</span></div>
+    <details class="cloud-settings"><summary>Set up iPhone + iPad sync</summary>
+      <p>This prepares connection settings. Shared sync will not be active until secure sign-in and database read/write are implemented.</p>
+      <label for="sbUrl">Supabase Project URL</label><input id="sbUrl" type="url" placeholder="https://your-project.supabase.co" autocomplete="url">
+      <label for="sbKey">Supabase publishable / anon key</label><input id="sbKey" type="password" placeholder="Public client key — never service_role" autocomplete="off">
+      <div class="cloud-actions"><button type="button" class="btn soft" id="cloudTest">Check format</button><button type="button" class="btn primary" id="cloudConnect">Save settings</button></div>
+      <p class="cloud-help">Export backups from both devices before migration. Never enter a service_role secret here.</p>
+    </details>
+  </section>
+  <section class="searchpanel">
+    <label class="searchlabel" for="search">Quick search</label>
+    <div class="searchwrap"><span class="searchicon">⌕</span><input id="search" class="search" placeholder="Search project, developer, area..." autocomplete="off" enterkeyhint="search"><button type="button" id="clearSearch" class="clear-search" aria-label="Clear search" hidden>×</button></div><div id="searchStatus" class="search-status" aria-live="polite">Search across project names, developers and locations</div>
+  </section>
+  <div class="sectionlabel"><strong>Browse by property type</strong><span>Choose a collection</span></div>
+  <div class="tabs">
+    <button class="tab active" data-kind="apartments"><span class="tabicon">▦</span><span class="tabtext">Apartments<small>Service & regular</small></span></button>
+    <button class="tab" data-kind="villas"><span class="tabicon">⌂</span><span class="tabtext">Villas<small>All villa projects</small></span></button>
+  </div>
+  <div class="filterhead"><strong>Delivery & status</strong></div>
+  <div class="filters" id="filters">
+    <button class="chip active" data-filter="all">All projects</button>
+    <button class="chip" data-filter="ready">Ready to move</button>
+    <button class="chip" data-filter="18m">1.5–2 years</button>
+    <button class="chip" data-filter="3to4">3–4 years</button>
+    <button class="chip" data-filter="verify">Needs verification</button>
+  </div>
+  <div class="toolsrow">
+    <button class="toolbtn" id="exportBtn">↧ Export backup</button><span class="toolsep"></span>
+    <button class="toolbtn" id="importBtn">↥ Import backup</button>
+    <input id="importFile" type="file" accept="application/json,.json" hidden>
+  </div>
+  <div class="listhead"><div><div class="list-kicker">Your collection</div><h2 id="listTitle">Apartments</h2></div><span class="count" id="count"></span></div>
+  <div id="cards" class="cards"></div>
+  <div class="footer">NK Property Desk · Availability and delivery must be confirmed per unit.</div>
+</main>
+</div>
+<div class="addbar"><button id="addBtn">＋ Add Project / Unit</button></div>
+<div class="modalback" id="modalBack" role="dialog" aria-modal="true">
+  <section class="modal">
+    <div class="modalhead"><h2 id="modalTitle">Project details</h2><button class="close" id="closeModal" aria-label="Close">×</button></div>
+    <div id="modalBody"></div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const CLOUD_CONFIG_KEY="nkpd_supabase_config_v1";
+function initCloudSetup(){
+ let cfg=null;try{cfg=JSON.parse(localStorage.getItem(CLOUD_CONFIG_KEY)||"null")}catch(e){}
+ if(cfg){document.getElementById("sbUrl").value=cfg.url||"";document.getElementById("sbKey").value=cfg.key||"";}
+ document.getElementById("cloudConnect").addEventListener("click",()=>{
+  const url=document.getElementById("sbUrl").value.trim().replace(/\/+$/,""),key=document.getElementById("sbKey").value.trim();
+  if(!/^https:\/\/[a-zA-Z0-9.-]+\.supabase\.co$/.test(url)||!key){toast("Enter a valid Supabase URL and publishable/anon key.");return;}
+  localStorage.setItem(CLOUD_CONFIG_KEY,JSON.stringify({url,key}));
+  document.getElementById("cloudStatus").textContent="Settings saved locally. Cloud sync is not active yet.";
+  toast("Settings saved in this browser only.");
+ });
+ document.getElementById("cloudTest").addEventListener("click",()=>{
+  const url=document.getElementById("sbUrl").value.trim(),key=document.getElementById("sbKey").value.trim();
+  if(!/^https:\/\/[a-zA-Z0-9.-]+\.supabase\.co\/?$/.test(url)||!key){toast("Enter the project URL and public client key first.");return;}
+  document.getElementById("cloudStatus").textContent="Format looks valid; database access has not been tested.";
+  toast("Format check passed — this does not confirm connection.");
+ });
+}
+
+const initialProjects = [
+ {id:"a1",name:"ORA – Solana East",developer:"ORA Developers",kind:"apartments",category:"Service Apartments",delivery:"verify",deliveryText:"Needs verification",area:"New Cairo / East",note:"Service apartments. Confirm current inventory and exact delivery."},
+ {id:"a2",name:"PRE",developer:"PRE",kind:"apartments",category:"Service Apartments",delivery:"verify",deliveryText:"Needs verification",note:"Project name kept as provided; confirm full project name."},
+ {id:"a3",name:"Al Marasem – Fifty Square",developer:"Al Marasem",kind:"apartments",category:"Service Apartments",delivery:"verify",deliveryText:"Needs verification",note:"Service apartment entry as provided. Confirm unit-specific details."},
+ {id:"a4",name:"LMD",developer:"LMD",kind:"apartments",category:"Service Apartments",delivery:"verify",deliveryText:"Needs verification",note:"Confirm the specific project and current inventory."},
+ {id:"a5",name:"SODIC East – New Heliopolis",developer:"SODIC",kind:"apartments",category:"Regular Apartments",delivery:"future",deliveryText:"3–4 years (verify)",note:"User grouped remaining apartment projects as 3–4 years; verify per unit."},
+ {id:"a6",name:"Mountain View 1.1",developer:"Mountain View",kind:"apartments",category:"Regular Apartments",delivery:"ready",deliveryText:"Ready to move (reported)",note:"User reported immediate-delivery units; confirm current unit availability."},
+ {id:"a7",name:"Hyde Park",developer:"Hyde Park Developments",kind:"apartments",category:"Regular Apartments",delivery:"future",deliveryText:"3–4 years (verify)",note:"Delivery estimate needs project/unit verification."},
+ {id:"a8",name:"Palm Hills",developer:"Palm Hills Developments",kind:"apartments",category:"Regular Apartments",delivery:"future",deliveryText:"3–4 years (verify)",note:"Delivery estimate needs project/unit verification."},
+ {id:"a9",name:"Taj City",developer:"Madinet Masr",kind:"apartments",category:"Regular Apartments",delivery:"ready",deliveryText:"Ready to move (reported)",note:"User reported immediate-delivery units; confirm current unit availability."},
+ {id:"a10",name:"Al Marasem",developer:"Al Marasem",kind:"apartments",category:"Regular Apartments",delivery:"ready",deliveryText:"Ready to move (reported)",note:"Fifth Square was reported to have immediate-delivery apartments; confirm specific unit."},
+ {id:"a11",name:"Al Abraj",developer:"Al Abraj",kind:"apartments",category:"Regular Apartments",delivery:"future",deliveryText:"3–4 years (verify)",note:"Project name kept as provided; confirm exact development."},
+ {id:"a12",name:"Kayan",developer:"Kayan",kind:"apartments",category:"Regular Apartments",delivery:"future",deliveryText:"3–4 years (verify)",note:"Confirm developer, exact project and delivery."},
+ {id:"a13",name:"Zomra",developer:"Needs confirmation",kind:"apartments",category:"Regular Apartments",delivery:"future",deliveryText:"3–4 years (verify)",note:"Name kept as provided; confirm spelling and exact project."},
+ {id:"a14",name:"Nations of Sky",developer:"Needs confirmation",kind:"apartments",category:"Regular Apartments",delivery:"future",deliveryText:"3–4 years (verify)",note:"Name kept as provided; confirm exact project spelling."},
+ {id:"a15",name:"Aliva – Mostakbal City",developer:"Mountain View",kind:"apartments",category:"Regular Apartments",delivery:"future",deliveryText:"3–4 years (verify)",note:"Delivery estimate needs project/unit verification."},
+ {id:"a16",name:"Sarai",developer:"MISR Italia Properties",kind:"apartments",category:"Regular Apartments",delivery:"ready",deliveryText:"Ready to move (reported)",note:"User reported immediate-delivery apartments; confirm the exact available unit and phase."},
+ {id:"v1",name:"La Vista City",developer:"La Vista Developments",kind:"villas",category:"Villas",delivery:"ready",deliveryText:"Ready to move (reported)",area:"New Administrative Capital",note:"User location note: next to Al-Fattah Al-Aleem Mosque, on Bin Zayed Axis. Confirm current available units."},
+ {id:"v2",name:"El Patio Town",developer:"La Vista Developments",kind:"villas",category:"Villas",delivery:"18m",deliveryText:"18 months (reported)",area:"End of AUC Street (verify)",note:"User reported delivery in 18 months. Confirm exact unit and date."},
+ {id:"v3",name:"El Patio TownSide",developer:"La Vista Developments",kind:"villas",category:"Villas",delivery:"verify",deliveryText:"Needs verification",area:"End of AUC Street (verify)",note:"Listed with El Patio projects; delivery not specified separately."},
+ {id:"v4",name:"Grove",developer:"Hassan Allam Properties",kind:"villas",category:"Villas",delivery:"18to24",deliveryText:"1.5–2 years (reported)",area:"End of AUC Street (verify)",note:"User said this project is by Hassan Allam and reported delivery in 18 months. Confirm exact official name."},
+ {id:"v5",name:"Eastshire",developer:"Al Qamzi Developments",kind:"villas",category:"Villas",delivery:"3to4",deliveryText:"3–4 years (reported)",area:"New Cairo / AUC area (verify)",note:"User reported delivery in 18 months. Verify exact location and available units."},
+ {id:"v6",name:"Mountain View 1.1",developer:"Mountain View",kind:"villas",category:"Villas",delivery:"ready",deliveryText:"Ready to move (reported)",note:"User reported immediate-delivery villas; confirm current unit availability."},
+ {id:"v7",name:"Hyde Park",developer:"Hyde Park Developments",kind:"villas",category:"Villas",delivery:"verify",deliveryText:"Needs verification",note:"Villa inventory and delivery require confirmation."},
+ {id:"v8",name:"LMD",developer:"LMD",kind:"villas",category:"Villas",delivery:"verify",deliveryText:"Needs verification",note:"Specific villa project and delivery require confirmation."},
+ {id:"v9",name:"Solana East",developer:"ORA Developers",kind:"villas",category:"Villas",delivery:"verify",deliveryText:"Needs verification",note:"Project included in villa list as requested; confirm unit types and availability."},
+ {id:"v10",name:"SODIC East – Villas",developer:"SODIC",kind:"villas",category:"Villas",delivery:"verify",deliveryText:"Needs verification",area:"New Heliopolis",note:"Kept separate from apartment entry. Confirm exact phase and available villa inventory."},
+ {id:"v11",name:"Eastville (AJNA – name to verify)",developer:"AJNA Developments",kind:"villas",category:"Villas",delivery:"verify",deliveryText:"Needs verification",note:"Temporary spelling based on user's 'East Villa'; confirm official project name."},
+ {id:"v12",name:"Sarai",developer:"MISR Italia Properties",kind:"villas",category:"Villas",delivery:"verify",deliveryText:"Needs verification",note:"Included in villa list; delivery and available units not specified."},
+ {id:"v13",name:"Taj City",developer:"Madinet Masr",kind:"villas",category:"Villas",delivery:"verify",deliveryText:"Needs verification",note:"Villa inventory and delivery require confirmation."}
+];
+const STORAGE_KEY = "nkPropertyDesk.v2";
+let projects = loadData();
+let kind = "apartments", filter = "all", activeProject = null;
+function seedExampleUnits(){
+ const sodic=projects.find(p=>p.id==="a5");
+ if(sodic&&!Array.isArray(sodic.units)){
+  sodic.units=[
+   {name:"1 Bedroom Apartment",type:"Apartment",area:76,bedrooms:1,bathrooms:null,price:6700000,finishing:"Flexi Finishing",delivery:"Delivery to be confirmed",notes:"Illustrative reference price from previously collected notes; verify current inventory.",dpPercent:null,dpAmount:null},
+   {name:"2 Bedroom Apartment",type:"Apartment",area:123,bedrooms:2,bathrooms:null,price:10900000,finishing:"Flexi Finishing",delivery:"Delivery to be confirmed",notes:"Illustrative reference price from previously collected notes; verify current inventory.",dpPercent:null,dpAmount:null},
+   {name:"3 Bedroom Apartment",type:"Apartment",area:149,bedrooms:3,bathrooms:null,price:13200000,finishing:"Flexi Finishing",delivery:"Delivery to be confirmed",notes:"Illustrative reference price from previously collected notes; verify current inventory.",dpPercent:null,dpAmount:null},
+   {name:"Duplex Apartment",type:"Duplex",area:200,bedrooms:null,bathrooms:null,price:17700000,finishing:"Flexi Finishing",delivery:"Delivery to be confirmed",notes:"Illustrative reference price from previously collected notes; verify current inventory.",dpPercent:null,dpAmount:null}
+  ];
+ }
+}
+seedExampleUnits();
+function loadData(){try{const saved=localStorage.getItem(STORAGE_KEY);if(saved){const parsed=JSON.parse(saved);if(Array.isArray(parsed)&&parsed.length)return parsed}}catch(e){}return initialProjects.map(p=>({...p}))}
+function saveData(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(projects));return true}catch(e){toast("Could not save in this browser. Export your data as backup.");return false}}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function money(n){return Number(n||0).toLocaleString("en-US",{maximumFractionDigits:2})+" EGP"}
+function statusClass(p){return p.delivery==="ready"?"ready":p.delivery==="18m"?"future":p.delivery==="18to24"?"midterm":p.delivery==="3to4"?"longterm":p.delivery==="future"?"future":"check"}
+function statusText(p){return p.deliveryText || (p.delivery==="ready"?"Ready to move":p.delivery==="18m"?"18 months":p.delivery==="18to24"?"1.5–2 years":p.delivery==="3to4"?"3–4 years":p.delivery==="future"?"Future delivery":"Needs verification")}
+function render(){
+ const searchEl=document.getElementById("search");
+ const query=searchEl.value.trim().toLowerCase();
+ const filtered=projects.filter(p=>p.kind===kind&&[p.name,p.developer,p.area,p.category,p.note,p.bua,p.finishing,p.installmentYears,p.deliveryText].join(" ").toLowerCase().includes(query)&&(filter==="all"||(filter==="ready"&&p.delivery==="ready")||(filter==="18m"&&(p.delivery==="18m"||p.delivery==="18to24"))||(filter==="3to4"&&p.delivery==="3to4")||(filter==="verify"&&p.delivery==="verify")));
+ const clearBtn=document.getElementById("clearSearch");
+ if(clearBtn)clearBtn.hidden=!query;
+ const searchStatus=document.getElementById("searchStatus");
+ if(searchStatus)searchStatus.textContent=query?(filtered.length?`${filtered.length} matching ${filtered.length===1?"project":"projects"} in ${kind==="villas"?"Villas":"Apartments"}`:"No matches — try a project name, developer or location"):"Search across project names, developers and locations";
+ document.getElementById("listTitle").textContent=kind==="apartments"?"Apartments":"Villas";
+ document.getElementById("count").textContent=filtered.length+(filtered.length===1?" project":" projects");
+ document.getElementById("cards").innerHTML=filtered.length?filtered.map(p=>`
+ <article class="project">
+  <div class="projecttop"><div><div class="projectname">${esc(p.name)}</div><div class="developer">${esc(p.developer||"Developer not added")}</div></div><span class="tag ${statusClass(p)}">${esc(statusText(p))}</span></div>
+  <div class="projectmeta"><span class="pill">${esc(p.category||"Villas")}</span>${p.area?`<span class="pill">⌖ ${esc(p.area)}</span>`:""}${p.bua?`<span class="pill area-pill">⌗ ${esc(p.bua)} m² BUA</span>`:""}${p.installmentYears?`<span class="pill installment-pill">↻ Installments · ${esc(p.installmentYears)} years</span>`:""}${p.finishing?`<span class="pill finishing-pill">Finishing · ${esc(p.finishing)}</span>`:""}</div>
+  ${p.price?`<div class="price-strip"><div class="price-cell"><small>Unit / starting price</small><strong>${money(p.price)}</strong></div>${p.dpPercent!==""&&p.dpPercent!=null?`<div class="price-cell dp-cell"><small>Down payment · ${esc(p.dpPercent)}%</small><strong>${money(Number(p.price)*Number(p.dpPercent)/100)}</strong></div>`:p.dpAmount?`<div class="price-cell dp-cell"><small>Down payment</small><strong>${money(p.dpAmount)}</strong></div>`:""}</div>`:""}
+  <div class="projectactions"><button class="btn primary detail-cta" onclick="openDetails('${p.id}')">View details <span aria-hidden="true">↗</span></button><button class="btn soft" onclick="openEdit('${p.id}')">Edit</button></div>
+ </article>`).join(""):`<div class="empty">No projects found.<br><span class="note">Try another search or add a project.</span></div>`;
+ document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.kind===kind));
+ document.querySelectorAll(".chip").forEach(b=>b.classList.toggle("active",b.dataset.filter===filter));
+}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)}
+function showModal(title,body){document.getElementById("modalTitle").textContent=title;document.getElementById("modalBody").innerHTML=body;document.getElementById("modalBack").classList.add("show");document.body.style.overflow="hidden"}
+function closeModal(){document.getElementById("modalBack").classList.remove("show");document.body.style.overflow="";activeProject=null}
+function openDetails(id){
+ const p=projects.find(x=>x.id===id);if(!p)return;activeProject=id;
+ const units=Array.isArray(p.units)?p.units:[];
+ const unitCards=units.length?units.map((u,i)=>`
+  <button class="unitcard" onclick="openUnitDetails('${p.id}',${i})">
+   <span class="unitthumb">${u.type==="Villa"?"⌂":"▦"}</span>
+   <span class="unitcopy"><strong>${esc(u.name||u.type||"Unit")}</strong><small>${esc(u.area?u.area+" m²":"Area not added")} · ${esc(u.bedrooms||"—")} beds</small><b>${u.price?money(u.price):"Price not added"}</b></span>
+   <span class="unitchev">›</span>
+  </button>`).join(""):`<div class="unitempty"><strong>No units added yet</strong><span>Add a specific unit here to save its area, rooms, price and down payment.</span></div>`;
+ showModal(p.name,`
+ <div class="projecthero">
+  <div class="projecthero-eyebrow">${esc(p.category||"Property project")}</div>
+  <h3>${esc(p.name)}</h3><p>${esc(p.developer||"Developer not added")}${p.area?" · "+esc(p.area):""}</p>
+  <span class="tag ${statusClass(p)}">${esc(statusText(p))}</span>
+ </div>
+ <div class="detailsection-title"><strong>Project overview</strong><button class="mini-action" onclick="openEdit('${p.id}')">Edit project</button></div>
+ <div class="detailsgrid">
+  <div class="detailbox"><small>Property type</small><strong>${p.kind==="villas"?"Villas":"Apartments"}</strong></div>
+  <div class="detailbox"><small>Delivery</small><strong>${esc(statusText(p))}</strong></div>
+  <div class="detailbox"><small>Developer</small><strong>${esc(p.developer||"Not added")}</strong></div>
+  <div class="detailbox"><small>Location</small><strong>${esc(p.area||"Not added")}</strong></div>
+  <div class="detailbox"><small>Built-up area</small><strong>${p.bua?esc(p.bua)+" m²":"Not added"}</strong></div>
+  <div class="detailbox"><small>Installment period</small><strong>${p.installmentYears?esc(p.installmentYears)+" years":"Not added"}</strong></div>
+  <div class="detailbox"><small>Finishing</small><strong>${esc(p.finishing||"Not specified")}</strong></div>
+ </div>
+ ${p.note?`<p class="note projectnote">${esc(p.note)}</p>`:""}
+ <div class="detailsection-title"><strong>Available units</strong><span class="unitcount">${units.length} ${units.length===1?"unit":"units"}</span></div>
+ <div class="unitlist">${unitCards}</div>
+ <button class="btn primary fullbtn" onclick="openUnitForm('${p.id}')">＋ Add a unit to this project</button>
+ <p class="note">Unit prices and availability should be confirmed before sharing with a client. This prototype saves data in this browser only.</p>
+ `);
+}
+function openUnitForm(projectId,unitIndex){
+ const p=projects.find(x=>x.id===projectId);if(!p)return;
+ const old=Number.isInteger(unitIndex)&&p.units&&p.units[unitIndex]?p.units[unitIndex]:null;
+ showModal(old?"Edit unit":"Add unit · "+p.name,`
+ <form id="unitForm" onsubmit="saveUnit(event,'${p.id}',${old?unitIndex:"null"})">
+  <div class="field"><label>Unit label *</label><input name="name" required value="${esc(old?.name||"")}" placeholder="e.g. 2 Bedroom Apartment"></div>
+  <div class="formgrid">
+   <div class="field"><label>Unit type</label><select name="type"><option ${old?.type==="Apartment"||!old?"selected":""}>Apartment</option><option ${old?.type==="Duplex"?"selected":""}>Duplex</option><option ${old?.type==="Town House"?"selected":""}>Town House</option><option ${old?.type==="Twin House"?"selected":""}>Twin House</option><option ${old?.type==="Standalone"?"selected":""}>Standalone</option><option ${old?.type==="Villa"?"selected":""}>Villa</option><option ${old?.type==="Studio"?"selected":""}>Studio</option></select></div>
+   <div class="field"><label>Area (m²)</label><input name="area" type="number" min="0" step="any" inputmode="decimal" value="${esc(old?.area||"")}" placeholder="e.g. 123"></div>
+  </div>
+  <div class="formgrid">
+   <div class="field"><label>Bedrooms</label><input name="bedrooms" type="number" min="0" step="1" inputmode="numeric" value="${esc(old?.bedrooms??"")}" placeholder="e.g. 2"></div>
+   <div class="field"><label>Bathrooms</label><input name="bathrooms" type="number" min="0" step="1" inputmode="numeric" value="${esc(old?.bathrooms??"")}" placeholder="e.g. 2"></div>
+  </div>
+  <div class="field"><label>Unit price (EGP)</label><input name="price" type="number" min="0" step="any" inputmode="decimal" value="${esc(old?.price||"")}" placeholder="Enter confirmed unit price"></div>
+  <div class="formgrid">
+   <div class="field"><label>Finishing</label><input name="finishing" value="${esc(old?.finishing||"")}" placeholder="e.g. Fully finished"></div>
+   <div class="field"><label>Delivery</label><input name="delivery" value="${esc(old?.delivery||"")}" placeholder="e.g. Ready to move"></div>
+  </div>
+  <div class="field"><label>Unit notes</label><textarea name="notes" rows="2" placeholder="View, floor, payment plan...">${esc(old?.notes||"")}</textarea></div>
+  <div class="projectactions"><button class="btn primary" type="submit">Save unit</button><button class="btn soft" type="button" onclick="openDetails('${p.id}')">Cancel</button>${old?`<button class="btn danger" type="button" onclick="deleteUnit('${p.id}',${unitIndex})">Delete</button>`:""}</div>
+ </form>`);
+}
+function saveUnit(event,projectId,unitIndex){
+ event.preventDefault();const p=projects.find(x=>x.id===projectId);if(!p)return;
+ const fd=new FormData(event.target),name=String(fd.get("name")||"").trim();if(!name){toast("Unit label is required.");return}
+ const num=k=>fd.get(k)===""?null:Number(fd.get(k));
+ const unit={name,type:fd.get("type"),area:num("area"),bedrooms:num("bedrooms"),bathrooms:num("bathrooms"),price:num("price"),finishing:String(fd.get("finishing")||"").trim(),delivery:String(fd.get("delivery")||"").trim(),notes:String(fd.get("notes")||"").trim(),dpPercent:null,dpAmount:null};
+ if(!Array.isArray(p.units))p.units=[];
+ if(unitIndex!==null&&Number.isInteger(unitIndex)&&p.units[unitIndex])p.units[unitIndex]=unit;else p.units.push(unit);
+ if(saveData()){render();openDetails(projectId);toast("Unit saved.");}
+}
+function deleteUnit(projectId,index){const p=projects.find(x=>x.id===projectId);if(!p||!p.units||!p.units[index])return;if(!confirm("Delete this unit?"))return;p.units.splice(index,1);saveData();openDetails(projectId);toast("Unit deleted.");}
+function openUnitDetails(projectId,index){
+ const p=projects.find(x=>x.id===projectId),u=p&&p.units&&p.units[index];if(!p||!u)return;
+ const price=Number(u.price||0),rate=u.dpPercent==null?10:Number(u.dpPercent),dp=price*rate/100;
+ showModal(u.name,`
+  <div class="unit-photo-placeholder"><span>${u.type==="Villa"||u.type==="Standalone"||u.type==="Twin House"||u.type==="Town House"?"⌂":"▦"}</span><small>${esc(u.type||"Unit")} · ${esc(p.name)}</small></div>
+  <div class="unitdetail-title"><div><h3>${esc(u.name)}</h3><p>${esc(p.name)} · ${esc(p.developer||"")}</p></div><span class="tag ${u.delivery.toLowerCase().includes("ready")?"ready":"check"}">${esc(u.delivery||statusText(p))}</span></div>
+  <div class="unitstats">
+   <div><strong>${u.area?esc(u.area):"—"}</strong><small>Area m²</small></div>
+   <div><strong>${u.bedrooms==null?"—":esc(u.bedrooms)}</strong><small>Bedrooms</small></div>
+   <div><strong>${u.bathrooms==null?"—":esc(u.bathrooms)}</strong><small>Bathrooms</small></div>
+  </div>
+  <div class="unitpricebox"><small>Total unit price</small><strong>${u.price?money(u.price):"Price not added"}</strong><span>${esc(u.finishing||"Finishing not specified")}</span></div>
+  ${u.dpAmount!=null?`<div class="unit-saved-dp"><div><small>Saved down payment</small><strong>${money(u.dpAmount)}</strong></div><div><small>Down payment rate</small><strong>${Number(u.dpPercent||0).toFixed(2).replace(/\\.00$/,"")}%</strong></div><div><small>Remaining amount</small><strong>${money(Math.max(0,Number(u.price||0)-Number(u.dpAmount||0)))}</strong></div></div>`:""}
+  ${u.notes?`<p class="note">${esc(u.notes)}</p>`:""}
+  <button class="btn primary fullbtn" onclick="openUnitDP('${p.id}',${index})">▦ Calculate down payment</button>
+  <div class="projectactions"><button class="btn soft" onclick="openUnitForm('${p.id}',${index})">Edit unit</button><button class="btn soft" onclick="openDetails('${p.id}')">Back to project</button></div>
+ `);
+}
+function openUnitDP(projectId,index){
+ const p=projects.find(x=>x.id===projectId),u=p&&p.units&&p.units[index];if(!p||!u)return;
+ const price=Number(u.price||0),rate=u.dpPercent==null?10:Number(u.dpPercent);
+ showModal("Down payment calculator",`
+  <div class="unitpricebox"><small>${esc(u.name)}</small><strong>${price?money(price):"Enter unit price below"}</strong><span>${esc(p.name)}</span></div>
+  <div class="field"><label>Unit price (EGP)</label><input id="unitDPPrice" type="number" min="0" step="any" inputmode="decimal" value="${price||""}" placeholder="Enter price"></div>
+  <div class="field"><label>Down payment method</label><div class="calc-toggle"><button id="unitPctTab" class="selected" onclick="setUnitDPMode('percent')">Percentage</button><button id="unitAmtTab" onclick="setUnitDPMode('amount')">Fixed amount</button></div></div>
+  <div class="field"><label id="unitDPLabel">Down payment percentage</label><input id="unitDPValue" type="number" min="0" step="0.5" inputmode="decimal" value="${rate}" placeholder="Enter value"></div>
+  <div class="quickperc">${[0,5,10,15,20,25,30].map(n=>`<button type="button" onclick="setUnitDPValue(${n})">${n}%</button>`).join("")}</div>
+  <div class="calcbox"><div class="label">Down payment</div><div id="unitDPResult" class="bigmoney">—</div><div class="calcrow"><span>Remaining amount</span><strong id="unitDPRemain">—</strong></div><div class="calcrow"><span>Percentage</span><strong id="unitDPRateLabel">—</strong></div></div>
+  <div class="projectactions"><button class="btn primary" onclick="saveUnitDP('${p.id}',${index})">Save calculation</button><button class="btn soft" onclick="openUnitDetails('${p.id}',${index})">Cancel</button></div>
+ `);
+ window.unitDPMode="percent";
+ const update=()=>{const pr=Number(document.getElementById("unitDPPrice").value),v=Number(document.getElementById("unitDPValue").value),mode=window.unitDPMode||"percent";const valid=document.getElementById("unitDPPrice").value!==""&&document.getElementById("unitDPValue").value!==""&&pr>=0&&v>=0&&(mode==="percent"?v<=100:v<=pr);const amount=mode==="percent"?pr*v/100:v;document.getElementById("unitDPResult").textContent=valid?money(amount):"Check values";document.getElementById("unitDPRemain").textContent=valid?money(pr-amount):"—";document.getElementById("unitDPRateLabel").textContent=valid?(pr?((amount/pr)*100).toFixed(2).replace(/\.00$/,""):"0")+"%":"—"};
+ document.getElementById("unitDPPrice").addEventListener("input",update);document.getElementById("unitDPValue").addEventListener("input",update);update();
+}
+function setUnitDPMode(mode){window.unitDPMode=mode;document.getElementById("unitPctTab").classList.toggle("selected",mode==="percent");document.getElementById("unitAmtTab").classList.toggle("selected",mode==="amount");document.getElementById("unitDPLabel").textContent=mode==="percent"?"Down payment percentage":"Down payment amount (EGP)";document.getElementById("unitDPValue").value=mode==="percent"?10:"";document.getElementById("unitDPValue").max=mode==="percent"?100:document.getElementById("unitDPPrice").value;document.getElementById("unitDPValue").placeholder=mode==="percent"?"0–100%":"Enter amount";document.getElementById("unitDPValue").dispatchEvent(new Event("input"))}
+function setUnitDPValue(n){if((window.unitDPMode||"percent")!=="percent")setUnitDPMode("percent");const el=document.getElementById("unitDPValue");el.value=n;el.dispatchEvent(new Event("input"))}
+function saveUnitDP(projectId,index){const p=projects.find(x=>x.id===projectId),u=p&&p.units&&p.units[index];if(!u)return;const priceEl=document.getElementById("unitDPPrice"),valEl=document.getElementById("unitDPValue"),price=Number(priceEl.value),v=Number(valEl.value),mode=window.unitDPMode||"percent";if(priceEl.value===""||valEl.value===""||price<0||v<0||(mode==="percent"&&v>100)||(mode==="amount"&&v>price)){toast("Please check the price and down payment.");return}const amount=mode==="percent"?price*v/100:v;u.price=price;u.dpPercent=price?amount/price*100:0;u.dpAmount=amount;saveData();openUnitDetails(projectId,index);toast("Unit calculation saved.");}
+function openDP(id){
+ const p=projects.find(x=>x.id===id);if(!p)return;activeProject=id;
+ const price=p.price!==""&&p.price!=null?Number(p.price):0;
+ showModal("Smart Down Payment",`
+ <div class="field"><label>Project / Unit</label><input value="${esc(p.name)}" disabled></div>
+ <div class="field"><label>Unit price (EGP)</label><input id="dpPrice" type="number" min="0" inputmode="decimal" value="${price||""}" placeholder="Enter unit price"></div>
+ <div class="field"><label>Choose a percentage or enter your own</label><input id="dpRate" type="number" min="0" max="100" step="0.5" inputmode="decimal" value="${p.dpPercent!==""&&p.dpPercent!=null?esc(p.dpPercent):"10"}" placeholder="Down payment %"><div class="quickperc">${[5,10,15,20,25,30].map(n=>`<button type="button" onclick="setPercent(${n})">${n}%</button>`).join("")}</div></div>
+ <div class="calcbox"><div class="label">Calculated Down Payment</div><div id="dpResult" class="bigmoney">—</div><div class="calcrow"><span>Down payment rate</span><strong id="dpRateLabel">10%</strong></div><div class="calcrow"><span>Remaining amount</span><strong id="dpRemaining">—</strong></div></div>
+ <div class="projectactions"><button class="btn primary" onclick="saveDP('${p.id}')">Save to this project</button><button class="btn soft" onclick="closeModal()">Cancel</button></div>
+ <p class="note">The calculator works with any price and percentage. Saving stores the price and default down-payment rate on this project entry.</p>
+ `);
+ const priceEl=document.getElementById("dpPrice"), rateEl=document.getElementById("dpRate");
+ const update=()=>{const pr=Number(priceEl.value),rt=Number(rateEl.value),valid=priceEl.value!==""&&rateEl.value!==""&&pr>=0&&rt>=0&&rt<=100;document.getElementById("dpResult").textContent=valid?money(pr*rt/100):"Check values";document.getElementById("dpRateLabel").textContent=rateEl.value!==""&&rt>=0&&rt<=100?rt+"%":"—";document.getElementById("dpRemaining").textContent=valid?money(pr-(pr*rt/100)):"—"};
+ priceEl.addEventListener("input",update);rateEl.addEventListener("input",update);update();
+}
+function setPercent(n){const el=document.getElementById("dpRate");if(el){el.value=n;el.dispatchEvent(new Event("input"))}}
+function saveDP(id){const p=projects.find(x=>x.id===id);if(!p)return;const priceEl=document.getElementById("dpPrice"),rateEl=document.getElementById("dpRate");const pr=Number(priceEl.value),rt=Number(rateEl.value);if(priceEl.value===""||rateEl.value===""||!Number.isFinite(pr)||pr<0||!Number.isFinite(rt)||rt<0||rt>100){toast("Enter a valid price and a percentage from 0 to 100.");return}p.price=pr;p.dpPercent=rt;p.dpAmount=pr*rt/100;saveData();closeModal();render();toast("Down payment saved.");}
+function openEdit(id){
+ const p=id?projects.find(x=>x.id===id):null;activeProject=id||null;
+ const value=(k,d="")=>esc(p&&p[k]!=null?p[k]:d);
+ showModal(p?"Edit project":"Add project / unit",`
+ <form id="projectForm" onsubmit="saveProject(event,'${id||""}')">
+ <div class="field"><label>Project name *</label><input name="name" required value="${value("name")}" placeholder="e.g. Mountain View 1.1"></div>
+ <div class="formgrid">
+ <div class="field"><label>Section *</label><select name="kind"><option value="apartments" ${value("kind",kind)==="apartments"?"selected":""}>Apartments</option><option value="villas" ${value("kind",kind)==="villas"?"selected":""}>Villas</option></select></div>
+ <div class="field"><label>Apartment category</label><select name="category"><option ${value("category")==="Service Apartments"?"selected":""}>Service Apartments</option><option ${value("category")==="Regular Apartments"?"selected":""}>Regular Apartments</option><option ${value("category")==="Villas"?"selected":""}>Villas</option></select></div>
+ </div>
+ <div class="field"><label>Developer</label><input name="developer" value="${value("developer")}" placeholder="Developer name"></div>
+ <div class="formgrid">
+ <div class="field"><label>Area / Location</label><input name="area" value="${value("area")}" placeholder="Area or nearby landmark"></div>
+ <div class="field"><label>Built-up area (m²)</label><input name="bua" type="number" min="0" step="any" inputmode="decimal" value="${value("bua")}" placeholder="e.g. 228"></div>
+ </div>
+ <div class="field"><label>Delivery status</label><select name="delivery">
+  <option value="verify" ${value("delivery","verify")==="verify"?"selected":""}>Needs verification</option>
+  <option value="ready" ${value("delivery")==="ready"?"selected":""}>Ready to move (reported)</option>
+  <option value="18m" ${value("delivery")==="18m"?"selected":""}>18 months (reported)</option>
+  <option value="18to24" ${value("delivery")==="18to24"?"selected":""}>1.5–2 years (reported)</option>
+  <option value="3to4" ${value("delivery")==="3to4"?"selected":""}>3–4 years (reported)</option>
+  <option value="future" ${value("delivery")==="future"?"selected":""}>Future delivery (verify)</option>
+ </select></div>
+ <div class="formgrid">
+ <div class="field"><label>Unit price (EGP)</label><input name="price" type="number" min="0" step="any" inputmode="decimal" value="${value("price")}" placeholder="Optional"></div>
+ <div class="field"><label>Down payment (%)</label><input name="dpPercent" type="number" min="0" max="100" step="0.5" inputmode="decimal" value="${value("dpPercent")}" placeholder="Optional"></div>
+ </div>
+ <div class="field"><label>Installment period (years)</label><input name="installmentYears" type="number" min="1" max="30" step="0.5" inputmode="decimal" value="${value("installmentYears")}" placeholder="e.g. 8, 10 or 12"></div>
+ <div class="field"><label>Finishing (optional)</label><select name="finishing">
+  <option value="">Not specified</option>
+  <option value="Core & Shell" ${value("finishing")==="Core & Shell"?"selected":""}>Core & Shell</option>
+  <option value="Semi-finished" ${value("finishing")==="Semi-finished"?"selected":""}>Semi-finished</option>
+  <option value="Flexi Finishing" ${value("finishing")==="Flexi Finishing"?"selected":""}>Flexi Finishing</option>
+  <option value="Fully Finished" ${value("finishing")==="Fully Finished"?"selected":""}>Fully Finished</option>
+  <option value="Fully Finished + ACs" ${value("finishing")==="Fully Finished + ACs"?"selected":""}>Fully Finished + ACs</option>
+ </select></div>
+ <div class="field"><label>Notes</label><textarea name="note" rows="3" placeholder="Optional notes">${value("note")}</textarea></div>
+ <p class="note">Only add a price or down payment if you have the unit's actual details. Leave unknown information blank.</p>
+ <div class="projectactions"><button type="submit" class="btn primary">Save</button><button type="button" class="btn soft" onclick="closeModal()">Cancel</button>${p?`<button type="button" class="btn danger" onclick="deleteProject('${p.id}')">Delete</button>`:""}</div>
+ </form>`);
+}
+function saveProject(event,id){event.preventDefault();const form=event.target,fd=new FormData(form),name=String(fd.get("name")||"").trim();if(!name){toast("Project name is required.");return}
+ const k=fd.get("kind"),cat=k==="villas"?"Villas":fd.get("category"),del=fd.get("delivery");
+ const deliveryText=del==="ready"?"Ready to move (reported)":del==="18m"?"18 months (reported)":del==="18to24"?"1.5–2 years (reported)":del==="3to4"?"3–4 years (reported)":del==="future"?"Future delivery (verify)":"Needs verification";
+ const rawPrice=fd.get("price"),rawRate=fd.get("dpPercent"),rawYears=fd.get("installmentYears");
+ const obj={name,kind:k,category:cat,developer:String(fd.get("developer")||"").trim(),area:String(fd.get("area")||"").trim(),bua:fd.get("bua")===""?"":Number(fd.get("bua")),delivery:del,deliveryText,installmentYears:rawYears===""?"":Number(rawYears),finishing:String(fd.get("finishing")||"").trim(),note:String(fd.get("note")||"").trim(),price:rawPrice===""?"":Number(rawPrice),dpPercent:rawRate===""?"":Number(rawRate)};
+ if(obj.dpPercent!==""&&(obj.dpPercent<0||obj.dpPercent>100)){toast("Down payment must be between 0 and 100%.");return}
+ if(obj.price!==""&&obj.dpPercent!=="")obj.dpAmount=obj.price*obj.dpPercent/100;
+ if(id){const i=projects.findIndex(x=>x.id===id);if(i>=0)projects[i]={...projects[i],...obj}}else{obj.id="custom-"+Date.now();projects.push(obj)}
+ saveData();kind=k;filter="all";closeModal();render();toast("Saved successfully.");}
+function deleteProject(id){if(!confirm("Delete this project from this device?"))return;projects=projects.filter(p=>p.id!==id);saveData();closeModal();render();toast("Project deleted.");}
+function exportBackup(){
+ const payload={app:"NK Property Desk",version:2,exportedAt:new Date().toISOString(),projects};
+ const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="NK-Property-Desk-backup.json";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+ toast("Backup file prepared.");
+}
+function importBackup(event){
+ const file=event.target.files&&event.target.files[0];if(!file)return;
+ const reader=new FileReader();
+ reader.onload=()=>{
+  try{
+   const data=JSON.parse(String(reader.result||""));
+   const rows=Array.isArray(data)?data:data.projects;
+   if(!Array.isArray(rows)||!rows.every(p=>p&&typeof p==="object"&&typeof p.name==="string"&&["apartments","villas"].includes(p.kind))){
+    toast("Invalid backup file. No changes made.");return;
+   }
+   if(!confirm("Import will replace the current list on this device. Export a backup first if needed. Continue?"))return;
+   projects=rows.map((p,i)=>({...p,id:String(p.id||("import-"+Date.now()+"-"+i))}));
+   if(saveData()){render();toast("Backup imported successfully.");}
+  }catch(e){toast("Could not read this backup file.");}
+  finally{event.target.value="";}
+ };
+ reader.onerror=()=>{toast("Could not read this file.");event.target.value="";};
+ reader.readAsText(file);
+}
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{kind=b.dataset.kind;filter="all";render()}));
+document.querySelectorAll(".chip").forEach(b=>b.addEventListener("click",()=>{filter=b.dataset.filter;render()}));
+document.getElementById("search").addEventListener("input",render);
+const clearSearchBtn=document.getElementById("clearSearch");
+if(clearSearchBtn)clearSearchBtn.addEventListener("click",()=>{document.getElementById("search").value="";render();document.getElementById("search").focus()});
+document.getElementById("addBtn").addEventListener("click",()=>openEdit(null));
+document.getElementById("exportBtn").addEventListener("click",exportBackup);
+document.getElementById("importBtn").addEventListener("click",()=>document.getElementById("importFile").click());
+document.getElementById("importFile").addEventListener("change",importBackup);
+document.getElementById("closeModal").addEventListener("click",closeModal);
+document.getElementById("modalBack").addEventListener("click",e=>{if(e.target.id==="modalBack")closeModal()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+render();
+
+document.addEventListener('DOMContentLoaded',initCloudSetup);
+</script>
+</body>
+</html>
